@@ -20,11 +20,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-Route::resource('/fakultas', FakultasController::class);
-Route::resource('/prodi', ProdiController::class);
-Route::resource('/mahasiswa', MahasiswaController::class);
+    // Semua role bisa lihat data (index & show)
+    Route::get('/fakultas', [FakultasController::class, 'index'])->name('fakultas.index');
+    Route::get('/fakultas/{fakultas}', [FakultasController::class, 'show'])->name('fakultas.show');
+    Route::get('/prodi', [ProdiController::class, 'index'])->name('prodi.index');
+    Route::get('/prodi/{prodi}', [ProdiController::class, 'show'])->name('prodi.show');
+    Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
+    Route::get('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
+
+    // Hanya admin & dosen yang bisa CRUD (create/store/edit/update/destroy)
+    Route::middleware('role:admin,dosen')->group(function () {
+        Route::resource('/fakultas', FakultasController::class)->except(['index', 'show']);
+        Route::resource('/prodi', ProdiController::class)->except(['index', 'show']);
+        Route::resource('/mahasiswa', MahasiswaController::class)->except(['index', 'show']);
+    });
+});
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
