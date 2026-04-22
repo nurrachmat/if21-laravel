@@ -23,11 +23,11 @@ Route::middleware('auth')->group(function () {
 
     // Semua role bisa lihat data (index & show)
     Route::get('/fakultas', [FakultasController::class, 'index'])->name('fakultas.index');
-    Route::get('/fakultas/{fakultas}', [FakultasController::class, 'show'])->name('fakultas.show');
+    Route::get('/fakultas/{fakultas}', [FakultasController::class, 'show'])->whereNumber('fakultas')->name('fakultas.show');
     Route::get('/prodi', [ProdiController::class, 'index'])->name('prodi.index');
-    Route::get('/prodi/{prodi}', [ProdiController::class, 'show'])->name('prodi.show');
+    Route::get('/prodi/{prodi}', [ProdiController::class, 'show'])->whereNumber('prodi')->name('prodi.show');
     Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
-    Route::get('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
+    Route::get('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'show'])->whereNumber('mahasiswa')->name('mahasiswa.show');
 
     // Hanya admin & dosen yang bisa CRUD (create/store/edit/update/destroy)
     Route::middleware('role:admin,dosen')->group(function () {
